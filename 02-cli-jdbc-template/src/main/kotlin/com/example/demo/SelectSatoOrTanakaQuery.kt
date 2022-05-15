@@ -4,11 +4,11 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
 
 interface SelectSatoOrSuzukiQuery {
-    fun perform(): List<Customer>;
+    fun perform(): List<Customer>
 }
 
 @Component
-class SelectSatoOrSuzukiQueryImpl(val jdbcTemplate: JdbcTemplate): SelectSatoOrSuzukiQuery {
+class SelectSatoOrSuzukiQueryImpl(val jdbcTemplate: JdbcTemplate) : SelectSatoOrSuzukiQuery {
     val sql = """
         SELECT id, first_name, last_name
         FROM customer

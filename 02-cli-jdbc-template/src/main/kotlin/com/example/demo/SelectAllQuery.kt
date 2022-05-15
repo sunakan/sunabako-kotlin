@@ -4,7 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
 
 interface SelectAllQuery {
-    fun perform(): List<Customer>;
+    fun perform(): List<Customer>
 }
 
 @Component
