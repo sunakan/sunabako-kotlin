@@ -1,0 +1,40 @@
+---
+
+version: '3.8'
+
+services:
+  #
+  # PostgreSQL
+  #
+  hoge-pg:
+    image: postgres:14-bullseye
+    container_name: hoge-pg
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: hoge-user
+      POSTGRES_PASSWORD: hoge-pass
+      POSTGRES_DB: hoge-db
+      POSTGRES_INIT_DB_ARGS: --encoding=UTF-8
+    volumes:
+      - type: bind
+        source: ${PWD}/sql/
+        target: /docker-entrypoint-initdb.d/
+  #
+  # pgweb
+  # PostgreSQLのGUIクライアント(ブラウザで見える)
+  #
+  pg-web:
+    image: sosedoff/pgweb
+    container_name: pg-web
+    ports:
+      - 8081:8081
+    environment:
+      DATABASE_URL: postgres://hoge-user:hoge-pass@hoge-pg:5432/hoge-db?sslmode=disable
+    depends_on:
+      - hoge-pg
+    restart: always # hoge-pgのコンテナではなくてDB起動するまでrestartしている
+
+networks:
+  default:
+    name: hoge-network
