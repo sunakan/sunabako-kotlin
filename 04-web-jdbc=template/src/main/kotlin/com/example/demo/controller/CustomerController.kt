@@ -13,4 +13,9 @@ class CustomerController(val jdbcTemplate: JdbcTemplate) {
     fun getAllCustomers(): List<Customer> {
         return SelectAllQueryImpl(jdbcTemplate).perform()
     }
+
+    @GetMapping("/SatoOrTanaka")
+    fun getSatoOrTanaka(): List<Customer>{
+        return SelectSatoOrSuzukiQueryImpl(jdbcTemplate).perform()
+    }
 }
