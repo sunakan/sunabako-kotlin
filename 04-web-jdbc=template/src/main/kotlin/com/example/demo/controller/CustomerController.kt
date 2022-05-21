@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("customers")
+@Suppress("unused")
 class CustomerController(val jdbcTemplate: JdbcTemplate) {
     @GetMapping("")
     fun getAllCustomers(): List<Customer> {
