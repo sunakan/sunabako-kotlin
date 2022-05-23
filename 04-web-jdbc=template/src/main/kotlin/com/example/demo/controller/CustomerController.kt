@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("customers")
 @Suppress("unused")
-class CustomerController(val jdbcTemplate: JdbcTemplate) {
+class CustomerController(val jdbcTemplate: JdbcTemplate, val selectAllQuery: SelectAllQuery) {
     @GetMapping("")
     fun getAllCustomers(): List<Customer> {
-        return SelectAllQueryImpl(jdbcTemplate).perform()
+        return selectAllQuery.perform()
     }
 
     @GetMapping("/SatoOrTanaka")
