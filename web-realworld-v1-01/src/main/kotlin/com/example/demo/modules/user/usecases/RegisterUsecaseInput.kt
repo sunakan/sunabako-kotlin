@@ -12,13 +12,14 @@ interface RegisterUsecaseInput {
     val username: String
 
     //
-    // エラー郡
+    // エラー
     //
-    data class ValidationErrors(override val errors: List<ErrorEvent>) : ErrorEvent.ErrorEvents
+    data class ValidationErrors(override val errors: List<ErrorEvent.BasicValidationError>) : ErrorEvent.ValidationErrors
     sealed interface Error : ErrorEvent {
-        object EmailMustBeNotNull : Error, ErrorEvent.Basic
-        object PasswordMustBeNotNull : Error, ErrorEvent.Basic
-        object UsernameMustBeNotNull : Error, ErrorEvent.Basic
+        // TODO: data classではなく、objectで表現できないか
+        data class EmailMustBeNotNull(override val key: String = "email", override val message: String = "必須項目です") : Error, ErrorEvent.BasicValidationError
+        data class PasswordMustBeNotNull(override val key: String = "password", override val message: String = "必須項目です") : Error, ErrorEvent.BasicValidationError
+        data class UsernameMustBeNotNull(override val key: String = "username", override val message: String = "必須項目です") : Error, ErrorEvent.BasicValidationError
     }
     companion object {
         fun new(
@@ -26,15 +27,14 @@ interface RegisterUsecaseInput {
             password: String?,
             username: String?,
         ): Either<ValidationErrors, RegisterUsecaseInput> {
-            // この辺もっとうまく記述できる気がする
+            // TODO: もっとうまく記述できる気がする
             if (email != null && password != null && username != null) {
-                val a = RegisterUsecaseInputImpl(email, password, username)
-                return Either.Right(a)
+                return Either.Right(RegisterUsecaseInputImpl(email, password, username))
             }
-            val errors: MutableList<ErrorEvent> = mutableListOf()
-            if (email == null) { errors.add(Error.EmailMustBeNotNull) }
-            if (password == null) { errors.add(Error.PasswordMustBeNotNull) }
-            if (username == null) { errors.add(Error.UsernameMustBeNotNull) }
+            val errors: MutableList<ErrorEvent.BasicValidationError> = mutableListOf()
+            if (email == null) { errors.add(Error.EmailMustBeNotNull()) }
+            if (password == null) { errors.add(Error.PasswordMustBeNotNull()) }
+            if (username == null) { errors.add(Error.UsernameMustBeNotNull()) }
             return Either.Left(ValidationErrors(errors))
         }
     }

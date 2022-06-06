@@ -13,15 +13,13 @@ interface UnregisteredUser {
 
     data class ValidationErrors(override val errors: List<ErrorEvent>) : ErrorEvent.ErrorEvents
     sealed interface Error : ErrorEvent {
-        data class EmailValidationError(val email: String) : Error, ErrorEvent.Basic
-
-        data class PasswordLengthError(val password: String) : Error, ErrorEvent.Basic
-        data class PasswordMustContainAtLeastOneUppercase(val password: String) : Error, ErrorEvent.Basic
-        data class PasswordMustContainAtLeastOneLowercase(val password: String) : Error, ErrorEvent.Basic
-        data class PasswordMustContainAtLeastOneNumeric(val password: String) : Error, ErrorEvent.Basic
-
-        data class UsernameLengthError(val username: String) : Error, ErrorEvent.Basic
-        data class UsernameCharacterCombinationError(val username: String) : Error, ErrorEvent.Basic
+        data class EmailValidationError(val email: String, override val key: String = "email", override val message: String = "emailアドレスを入力してください(例: abc@example.com)") : Error, ErrorEvent.BasicValidationError
+        data class PasswordLengthError(override val key: String = "password", override val message: String = "passwordは8文字以上64文字以下である必要があります") : Error, ErrorEvent.BasicValidationError
+        data class PasswordMustContainAtLeastOneUppercase(override val key: String = "password", override val message: String = "passwordには大文字の英字を1文字以上含めてください") : Error, ErrorEvent.BasicValidationError
+        data class PasswordMustContainAtLeastOneLowercase(override val key: String = "password", override val message: String = "passwordには小文字の英字を1文字以上含めてください") : Error, ErrorEvent.BasicValidationError
+        data class PasswordMustContainAtLeastOneNumeric(override val key: String = "password", override val message: String = "passwordには半角数字を1文字以上含めてください") : Error, ErrorEvent.BasicValidationError
+        data class UsernameLengthError(val username: String, override val key: String = "username", override val message: String = "usernameは4文字以上64文字以下である必要があります") : Error, ErrorEvent.BasicValidationError
+        data class UsernameCharacterCombinationError(val username: String, override val key: String = "username", override val message: String = "usernameに使えるのは半角英数字と_です") : Error, ErrorEvent.BasicValidationError
     }
 
     companion object {
@@ -45,16 +43,16 @@ interface UnregisteredUser {
             }
             // Password
             if (password.length < 8 || 64 < password.length) {
-                errors.add(Error.PasswordLengthError(password))
+                errors.add(Error.PasswordLengthError())
             }
-            if (password.filter { it in 'A'..'Z' }.isEmpty()) {
-                errors.add(Error.PasswordMustContainAtLeastOneUppercase(email))
+            if (password.none { it in 'A'..'Z' }) {
+                errors.add(Error.PasswordMustContainAtLeastOneUppercase())
             }
-            if (password.filter { it in 'a'..'z' }.isEmpty()) {
-                errors.add(Error.PasswordMustContainAtLeastOneLowercase(email))
+            if (password.none { it in 'a'..'z' }) {
+                errors.add(Error.PasswordMustContainAtLeastOneLowercase())
             }
-            if (password.filter { it in '0'..'9' }.isEmpty()) {
-                errors.add(Error.PasswordMustContainAtLeastOneNumeric(email))
+            if (password.none { it in '0'..'9' }) {
+                errors.add(Error.PasswordMustContainAtLeastOneNumeric())
             }
             // Username
             if (username.length < 4 || 64 < username.length) {

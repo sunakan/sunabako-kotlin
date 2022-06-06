@@ -17,6 +17,10 @@ package com.example.demo.shared
 //
 interface ErrorEvent {
     interface Basic : ErrorEvent
+    interface BasicValidationError : ErrorEvent {
+        val key: String
+        val message: String
+    }
     interface BasicWithErrorEvent : ErrorEvent { val cause: ErrorEvent }
     interface BasicWithThrowable : ErrorEvent { val cause: Throwable }
 
@@ -30,4 +34,5 @@ interface ErrorEvent {
 
     // 複数ありえる場合
     interface ErrorEvents : ErrorEvent { val errors: List<ErrorEvent> }
+    interface ValidationErrors : ErrorEvent { val errors: List<BasicValidationError> }
 }
