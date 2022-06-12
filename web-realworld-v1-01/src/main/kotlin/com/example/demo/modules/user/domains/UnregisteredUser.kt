@@ -11,7 +11,7 @@ interface UnregisteredUser {
     val password: String
     val username: String
 
-    data class ValidationErrors(override val errors: List<ErrorEvent>) : ErrorEvent.ErrorEvents
+    data class ValidationErrors(override val errors: List<ErrorEvent.BasicValidationError>) : ErrorEvent.ValidationErrors
     sealed interface Error : ErrorEvent {
         data class EmailValidationError(val email: String, override val key: String = "email", override val message: String = "emailアドレスを入力してください(例: abc@example.com)") : Error, ErrorEvent.BasicValidationError
         data class PasswordLengthError(override val key: String = "password", override val message: String = "passwordは8文字以上64文字以下である必要があります") : Error, ErrorEvent.BasicValidationError
@@ -28,7 +28,7 @@ interface UnregisteredUser {
             password: String,
             username: String,
         ): Either<ValidationErrors, UnregisteredUser> {
-            val errors: MutableList<ErrorEvent> = mutableListOf()
+            val errors: MutableList<ErrorEvent.BasicValidationError> = mutableListOf()
             // Email
             // https://android.googlesource.com/platform/frameworks/base/+/81aa097/core/java/android/util/Patterns.java#146
             val emailPattern = """[a-zA-Z0-9+._%\-+]{1,256}""" +

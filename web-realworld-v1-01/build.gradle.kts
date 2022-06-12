@@ -28,6 +28,32 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     //
+    // Spring JDBC
+    // URL
+    // - https://spring.pleiades.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/package-summary.html
+    // MavenCentral
+    // - https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc
+    // Main用途
+    // - DBへ保存
+    // Sub用途
+    // - 無し
+    //
+    // これを入れるだけで、application.properties/yamlや@ConfigurationによるDB接続設定が必要になる
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    //
+    // postgresql
+    // URL
+    // - https://jdbc.postgresql.org/
+    // MavenCentral
+    // - https://mvnrepository.com/artifact/org.postgresql/postgresql
+    // Main用途
+    // - DBつなぐ時のドライバ
+    // Sub用途
+    // -
+    //
+    implementation("org.postgresql:postgresql")
+
+    //
     // Arrow Core
     //
     // URL
@@ -66,7 +92,7 @@ dependencies {
     // MavenCentral
     // - https://mvnrepository.com/artifact/org.assertj/assertj-core
     // Main用途
-    // - Listの中身のTest
+    // - JUnitでassertThat(xxx).isEqualTo(yyy)みたいな感じで比較時に使う
     //
     testImplementation("org.assertj:assertj-core:3.23.1")
 
